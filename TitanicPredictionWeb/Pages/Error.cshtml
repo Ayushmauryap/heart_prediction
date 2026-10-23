@@ -1,0 +1,18 @@
+@page
+@model HeartHealthWeb.Pages.ErrorModel
+@{
+    ViewData["Title"] = "Something went wrong";
+}
+
+<main class="page-shell">
+    <section class="form-card">
+        <p class="eyebrow">Unexpected error</p>
+        <h1>We couldn't complete that request.</h1>
+        <p class="intro">Please return to the heart health screening and try again.</p>
+        @if (Model.ShowRequestId)
+        {
+            <p class="model-note">Request ID: <code>@Model.RequestId</code></p>
+        }
+        <a class="back-link" asp-page="/Index">Back to the screening</a>
+    </section>
+</main>

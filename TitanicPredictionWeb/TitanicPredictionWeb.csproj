@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <AssemblyName>HeartHealthWeb</AssemblyName>
+    <RootNamespace>HeartHealthWeb</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MySqlConnector" Version="2.4.0" />
+    <EmbeddedResource Include="Models\heart-disease-model.json"
+                      LogicalName="HeartHealthWeb.Models.heart-disease-model.json" />
+  </ItemGroup>
+</Project>

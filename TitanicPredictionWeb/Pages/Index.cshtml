@@ -1,0 +1,176 @@
+@page
+@model HeartHealthWeb.Pages.IndexModel
+@{
+    ViewData["Title"] = "Heart Health Screening";
+}
+
+<main class="page-shell">
+    <header class="topbar">
+        <a class="brand" asp-page="/Index" aria-label="Heartwise home">
+            <span class="brand-mark" aria-hidden="true"><span></span></span>
+            <span>heartwise</span>
+        </a>
+        <span class="topbar-note">MODEL-ASSISTED SCREENING <span aria-hidden="true">·</span> EDUCATIONAL USE</span>
+    </header>
+
+    <section class="hero">
+        <div class="hero-copy">
+            <p class="eyebrow"><span class="eyebrow-dot"></span> A thoughtful place to start</p>
+            <h1>Know your heart.<br /><span>Ask better questions.</span></h1>
+            <p class="intro">Explore how a machine-learning model reads a set of common heart-health measurements. Your result is a starting point for a conversation with a healthcare professional.</p>
+            <div class="hero-tags">
+                <span><span class="tag-dot"></span> 10 model inputs</span>
+                <span><span class="tag-dot"></span> Private by design</span>
+            </div>
+        </div>
+        <aside class="hero-panel">
+            <div class="panel-symbol" aria-hidden="true"><span class="pulse-line"></span></div>
+            <p class="panel-kicker">A note on your result</p>
+            <h2>Helpful context.<br />Never a diagnosis.</h2>
+            <p>This educational tool cannot evaluate your health or replace medical advice. A clinician can interpret your results in context.</p>
+            <div class="panel-rule"></div>
+            <p class="panel-footnote">If you have severe or sudden symptoms, seek urgent medical care.</p>
+        </aside>
+    </section>
+
+    @if (Model.Result is not null)
+    {
+        <section class="result-card @(Model.Result.HasHeartDisease ? "flagged" : "not-flagged")" aria-live="polite">
+            <div class="result-mark" aria-hidden="true">@(Model.Result.HasHeartDisease ? "!" : "✓")</div>
+            <div class="result-copy">
+                <p class="result-label">Your model result</p>
+                <h2>@(Model.Result.HasHeartDisease ? "The model flagged a potential signal" : "The model did not flag a signal")</h2>
+                <p>The model's leaf score is <strong>@Model.Result.ModelScore.ToString("P1")</strong>. This is not a personal clinical probability.</p>
+            </div>
+        </section>
+
+        @if (Model.SavedToDatabase)
+        {
+            <p class="database-status success" role="status">Your screening inputs and result were saved.</p>
+        }
+        else if (Model.DatabaseMessage is not null)
+        {
+            <p class="database-status error" role="alert">@Model.DatabaseMessage</p>
+        }
+    }
+
+    <section class="form-card">
+        <div class="form-heading">
+            <div>
+                <p class="eyebrow">Your screening</p>
+                <h2>Enter the measurements</h2>
+                <p class="section-intro">Use values from a recent check-up when possible. All fields are required.</p>
+            </div>
+            <span class="step-number">01 <span>/ 01</span></span>
+        </div>
+
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="validation-summary" role="alert"></div>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label asp-for="Patient.Age"></label>
+                    <div class="input-suffix">
+                        <input asp-for="Patient.Age" type="number" min="1" max="120" />
+                        <span>years</span>
+                    </div>
+                    <span asp-validation-for="Patient.Age"></span>
+                </div>
+                <div class="field">
+                    <label asp-for="Patient.Sex"></label>
+                    <select asp-for="Patient.Sex">
+                        <option value="F">Female</option>
+                        <option value="M">Male</option>
+                    </select>
+                    <span asp-validation-for="Patient.Sex"></span>
+                </div>
+                <div class="field">
+                    <label asp-for="Patient.ChestPainType"></label>
+                    <select asp-for="Patient.ChestPainType">
+                        <option value="ATA">Atypical angina</option>
+                        <option value="NAP">Non-anginal pain</option>
+                        <option value="ASY">Asymptomatic</option>
+                        <option value="TA">Typical angina</option>
+                    </select>
+                    <span asp-validation-for="Patient.ChestPainType"></span>
+                </div>
+                <div class="field">
+                    <label asp-for="Patient.RestingBP"></label>
+                    <div class="input-suffix">
+                        <input asp-for="Patient.RestingBP" type="number" min="0" max="300" />
+                        <span>mm Hg</span>
+                    </div>
+                    <span asp-validation-for="Patient.RestingBP"></span>
+                </div>
+                <div class="field">
+                    <label asp-for="Patient.Cholesterol"></label>
+                    <div class="input-suffix">
+                        <input asp-for="Patient.Cholesterol" type="number" min="0" max="1000" />
+                        <span>mg/dL</span>
+                    </div>
+                    <span asp-validation-for="Patient.Cholesterol"></span>
+                </div>
+                <div class="field">
+                    <label asp-for="Patient.FastingBS"></label>
+                    <select asp-for="Patient.FastingBS">
+                        <option value="0">No</option>
+                        <option value="1">Yes</option>
+                    </select>
+                    <span asp-validation-for="Patient.FastingBS"></span>
+                </div>
+                <div class="field">
+                    <label asp-for="Patient.RestingECG"></label>
+                    <select asp-for="Patient.RestingECG">
+                        <option value="Normal">Normal</option>
+                        <option value="ST">ST-T wave abnormality</option>
+                        <option value="LVH">Possible left ventricular hypertrophy</option>
+                    </select>
+                    <span asp-validation-for="Patient.RestingECG"></span>
+                </div>
+                <div class="field">
+                    <label asp-for="Patient.MaxHR"></label>
+                    <div class="input-suffix">
+                        <input asp-for="Patient.MaxHR" type="number" min="0" max="300" />
+                        <span>bpm</span>
+                    </div>
+                    <span asp-validation-for="Patient.MaxHR"></span>
+                </div>
+                <div class="field">
+                    <label asp-for="Patient.ExerciseAngina"></label>
+                    <select asp-for="Patient.ExerciseAngina">
+                        <option value="N">No</option>
+                        <option value="Y">Yes</option>
+                    </select>
+                    <span asp-validation-for="Patient.ExerciseAngina"></span>
+                </div>
+                <div class="field">
+                    <label asp-for="Patient.STSlope"></label>
+                    <select asp-for="Patient.STSlope">
+                        <option value="Up">Upsloping</option>
+                        <option value="Flat">Flat</option>
+                        <option value="Down">Downsloping</option>
+                    </select>
+                    <span asp-validation-for="Patient.STSlope"></span>
+                </div>
+            </div>
+
+            <div class="form-footer">
+                <p>For learning and discussion only. Your information is saved to the configured MySQL database when available.</p>
+                <button type="submit">See model result <span aria-hidden="true">→</span></button>
+            </div>
+        </form>
+    </section>
+
+    <aside class="model-note">
+        <span class="note-icon" aria-hidden="true">i</span>
+        <div>
+            <strong>About this model</strong>
+            <p>This page uses the supplied fitted model and its 10 expected inputs. It does not include Oldpeak, which the provided prediction pipeline does not accept. The model can be wrong; don't use it to make health decisions.</p>
+        </div>
+    </aside>
+
+    <footer>
+        <span>heartwise <span aria-hidden="true">·</span> an educational machine-learning demo</span>
+        <span>Not a substitute for professional medical care</span>
+    </footer>
+</main>
